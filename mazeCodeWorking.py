@@ -106,9 +106,15 @@ def moveGhost(app):
     else:
         app.ghostY -= 2
 
+def isDead(app):
+    if ((app.pX -app.ghostX) ** 2 + (app.pY - app.ghostY) ** 2) ** 0.5 < 5:
+        return True
+        
 def timerFired(app):
     print(getCell(app, 0, 0))
     moveGhost(app)
+    if isDead(app):
+        app.gameOver = True
     if(app.goUp):
         row, col = getCell(app, 0, 0)
         x0, y0, x1, y1 = getCellBounds(app, row, col)
