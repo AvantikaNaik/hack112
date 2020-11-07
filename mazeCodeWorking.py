@@ -201,18 +201,19 @@ def drawPlayer(app, canvas):
     canvas.create_image(app.pX, app.pY, image=ImageTk.PhotoImage(app.scaledChar.rotate(app.rotationAngle)))
 
 def redrawAll(app, canvas):
+    canvas.create_rectangle(0,0,app.height,app.width, fill = "black")
     for row in range(app.rows):
         for col in range(app.cols):
             (x0, y0, x1, y1) = getCellBounds(app, row, col)
             cell = app.cells[row][col]
             if cell.top:
-                canvas.create_line(x0, y0, x1, y0, width = 3)
+                canvas.create_line(x0, y0, x1, y0, width = 3, fill="white")
             if cell.left:
-                canvas.create_line(x0, y0, x0, y1, width = 3)
+                canvas.create_line(x0, y0, x0, y1, width = 3, fill="white")
             if cell.right:
-                canvas.create_line(x1, y0, x1, y1, width = 3)
+                canvas.create_line(x1, y0, x1, y1, width = 3, fill="white")
             if cell.bottom:
-                canvas.create_line(x0, y1, x1, y1, width = 3)
+                canvas.create_line(x0, y1, x1, y1, width = 3, fill="white")
     drawDeadEnds(app, canvas)
     drawPlayer(app, canvas)
     drawGhost(app, canvas)
