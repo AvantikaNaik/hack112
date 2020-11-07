@@ -5,7 +5,7 @@
 
 from random import shuffle, randrange
 from cmu_112_graphics import *
-
+import random
 from dataclasses import make_dataclass
 
 Cell = make_dataclass('Cell', ['left', 'top', 'right', 'bottom', 'row', 'col'])
@@ -32,7 +32,9 @@ def appStarted(app):
 
     app.dx = 0
     app.dy = 0
-    
+
+    makeGhost(app)
+
     app.keyImg = app.loadImage('key.gif')
     app.scaledImg = app.scaleImage(app.keyImg, 1/20)
 
@@ -54,6 +56,9 @@ def appStarted(app):
     findDeadEnds(app)
     selectDeadEnds(app)
 
+def makeGhost(app):
+    app.ghostX = random.randint(800, 1600)
+    app.ghostY = random.randint(800, 1600)
 
 def getCellBounds(app, row, col):
     cellWidth = 100
@@ -83,8 +88,20 @@ def keyPressed(app, event):
         app.goRight = True
         app.rotationAngle = 0
 
+
+def moveGhost(app):
+    if app.pX > app.ghostX:
+        app.ghostX += 2
+    else:
+        app.ghostX -= 2
+    if app.pY > app.ghostY:
+        app.ghostY += 2
+    else:
+        app.ghostY -= 2
+
 def timerFired(app):
     print(getCell(app, 0, 0))
+    moveGhost(app)
     if(app.goUp):
         row, col = getCell(app, 0, 0)
         x0, y0, x1, y1 = getCellBounds(app, row, col)
@@ -170,6 +187,8 @@ def selectDeadEnds(app):
         app.newDE.append((row, col))
     print(app.newDE)
 
+def drawGhost(app, canvas):
+    canvas.create_rectangle(app.ghostX-10, app.ghostY -10, app.ghostX+10, app.ghostY +10, fill = "green")
 
 def drawDeadEnds(app, canvas):
     for end in app.newDE:
@@ -194,8 +213,7 @@ def redrawAll(app, canvas):
                 canvas.create_line(x0, y1, x1, y1)
     drawDeadEnds(app, canvas)
     drawPlayer(app, canvas)
-
-
+    drawGhost(app, canvas)
 
 if __name__ == '__main__':
     runApp(width=620, height=620)
