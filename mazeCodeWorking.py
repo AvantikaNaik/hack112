@@ -32,6 +32,9 @@ def appStarted(app):
 
     app.dx = 0
     app.dy = 0
+    
+    app.keyImg = app.loadImage('key.gif')
+    app.scaledImg = app.scaleImage(app.keyImg, 1/20)
 
     app.pX = app.width / 2
     app.pY = app.height / 2
@@ -162,7 +165,7 @@ def selectDeadEnds(app):
 def drawDeadEnds(app, canvas):
     for end in app.newDE:
         (x0, y0, x1, y1) = getCellBounds(app, end[0], end[1])
-        canvas.create_oval(x0 + app.r, y0 + app.r ,x1 - app.r ,y1 - app.r, fill = 'blue')
+        canvas.create_image(x0 + 5*app.r, y0 + 5*app.r, image=ImageTk.PhotoImage(app.scaledImg))
     
 def drawPlayer(app, canvas):
     canvas.create_rectangle(app.pX - app.pR, app.pY - app.pR, app.pX + app.pR, app.pY + app.pR, fill = 'orange')
