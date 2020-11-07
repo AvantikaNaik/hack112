@@ -102,7 +102,7 @@ def keyPressed(app, event):
 def moveGhost(app):
     randint = random.randint(0,50)
     if randint == 49:
-        ghostMove = randint
+        ghostMove = -1 * randint
     else: ghostMove = 1
     if app.pX > app.ghostX:
         app.ghostX += ghostMove
