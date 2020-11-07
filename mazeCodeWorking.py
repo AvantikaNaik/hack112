@@ -36,9 +36,14 @@ def appStarted(app):
     app.keyImg = app.loadImage('key.gif')
     app.scaledImg = app.scaleImage(app.keyImg, 1/20)
 
+    app.charImg = app.loadImage('character.gif')
+    app.scaledChar = app.scaleImage(app.charImg, 2/5)
+
+    app.rotationAngle = 0
+    
     app.pX = app.width / 2
     app.pY = app.height / 2
-
+    
     app.cells = [([None] * app.cols) for i in range(app.rows)]
     for row in range(app.rows):
         for col in range(app.cols):
@@ -67,12 +72,16 @@ def getCell(app, x, y):
 def keyPressed(app, event):
     if(event.key == 'Up'):
         app.goUp = True
+        app.rotationAngle = 90
     if(event.key == 'Down'):
         app.goDown = True
+        app.rotationAngle = 270
     if(event.key == 'Left'):
         app.goLeft = True
+        app.rotationAngle = 180
     if(event.key == 'Right'):
         app.goRight = True
+        app.rotationAngle = 0
 
 def timerFired(app):
     print(getCell(app, 0, 0))
@@ -168,7 +177,7 @@ def drawDeadEnds(app, canvas):
         canvas.create_image(x0 + 5*app.r, y0 + 5*app.r, image=ImageTk.PhotoImage(app.scaledImg))
     
 def drawPlayer(app, canvas):
-    canvas.create_rectangle(app.pX - app.pR, app.pY - app.pR, app.pX + app.pR, app.pY + app.pR, fill = 'orange')
+    canvas.create_image(app.pX, app.pY, image=ImageTk.PhotoImage(app.scaledChar.rotate(app.rotationAngle)))
 
 def redrawAll(app, canvas):
     for row in range(app.rows):
