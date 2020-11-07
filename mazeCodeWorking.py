@@ -6,11 +6,16 @@
 from random import shuffle, randrange
 from cmu_112_graphics import *
 import random
+import time
 from dataclasses import make_dataclass
 
 Cell = make_dataclass('Cell', ['left', 'top', 'right', 'bottom', 'row', 'col'])
 
 def appStarted(app):
+    app.start = time.time()
+    app.gameOver = False
+    app.score = 0
+    app.endMaze = False
 
     app.timerDelay = 15
 
@@ -200,6 +205,33 @@ def drawDeadEnds(app, canvas):
 def drawPlayer(app, canvas):
     canvas.create_image(app.pX, app.pY, image=ImageTk.PhotoImage(app.scaledChar.rotate(app.rotationAngle)))
 
+def drawStartScreen(app, canvas):
+    if time.time() - app.start < 3:
+        canvas.create_rectangle(0, 0, app.width, app.height, fill = 'grey')
+        canvas.create_rectangle(0, app.height//2 - 100, app.width, app.height//2 + 100, fill = 'black')
+        canvas.create_text(app.width //2, app.height//2, text='Start Game!', font='Arial 40 bold', fill='red')
+
+def drawGameOver(app, canvas):
+    if app.gameOver:
+        canvas.create_rectangle(0, 0, app.width, app.height, fill='black')
+        canvas.create_text(app.width//2, app.height//2, text='Game Over', font='Arial 40 bold', fill='red')
+
+def drawPortal(app,canvas):
+    row = app.rows - 1
+    col = app.cols - 1
+    (x0, y0, x1, y1) = getCellBounds(app, row, col)
+    canvas.create_rectangle(x0, y0, x1, y1, fill='lightsalmon')
+
+def intersectPortal(app):
+    row = app.rows - 1
+    col = app.cols - 1
+    (x0, y0, x1, y1) = getCellBounds(app, row, col)
+    d = (((x0 + 50) - app.width//2)**2 + ((y0 + 50) - app.height//2)**2)**0.5
+    if d < 0:
+        app.score += 1
+        appStarted(app)
+
+
 def redrawAll(app, canvas):
     canvas.create_rectangle(0,0,app.height,app.width, fill = "black")
     for row in range(app.rows):
@@ -217,6 +249,9 @@ def redrawAll(app, canvas):
     drawDeadEnds(app, canvas)
     drawPlayer(app, canvas)
     drawGhost(app, canvas)
+    drawStartScreen(app, canvas)
+    drawPortal(app, canvas)
+    drawGameOver(app, canvas)
 
 if __name__ == '__main__':
     runApp(width=620, height=620)
