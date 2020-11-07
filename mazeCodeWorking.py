@@ -204,13 +204,13 @@ def redrawAll(app, canvas):
             (x0, y0, x1, y1) = getCellBounds(app, row, col)
             cell = app.cells[row][col]
             if cell.top:
-                canvas.create_line(x0, y0, x1, y0)
+                canvas.create_line(x0, y0, x1, y0, width = 3)
             if cell.left:
-                canvas.create_line(x0, y0, x0, y1)
+                canvas.create_line(x0, y0, x0, y1, width = 3)
             if cell.right:
-                canvas.create_line(x1, y0, x1, y1)
+                canvas.create_line(x1, y0, x1, y1, width = 3)
             if cell.bottom:
-                canvas.create_line(x0, y1, x1, y1)
+                canvas.create_line(x0, y1, x1, y1, width = 3)
     drawDeadEnds(app, canvas)
     drawPlayer(app, canvas)
     drawGhost(app, canvas)
