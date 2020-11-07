@@ -253,10 +253,10 @@ def redrawAll(app, canvas):
             if cell.bottom:
                 canvas.create_line(x0, y1, x1, y1, width = 3, fill="white")
     drawDeadEnds(app, canvas)
+    drawPortal(app, canvas)
     drawPlayer(app, canvas)
     drawGhost(app, canvas)
     drawStartScreen(app, canvas)
-    drawPortal(app, canvas)
     drawGameOver(app, canvas)
 
 if __name__ == '__main__':
