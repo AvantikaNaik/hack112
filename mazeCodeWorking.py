@@ -98,13 +98,13 @@ def keyPressed(app, event):
 
 def moveGhost(app):
     if app.pX > app.ghostX:
-        app.ghostX += 2
+        app.ghostX += 1
     else:
-        app.ghostX -= 2
+        app.ghostX -= 1
     if app.pY > app.ghostY:
-        app.ghostY += 2
+        app.ghostY += 1
     else:
-        app.ghostY -= 2
+        app.ghostY -= 1
 
 def isDead(app):
     if ((app.pX -app.ghostX) ** 2 + (app.pY - app.ghostY) ** 2) ** 0.5 < 5:
@@ -195,7 +195,7 @@ def getNearLines(app):
         x0, y0, x1, y1 = getCellBounds(app, nearCells[c][0], nearCells[c][1])
         row = nearCells[c][0]
         col = nearCells[c][1]
-        cell = app.cells[row][col]
+        cell = app.cells[row - 5][col - 5]
         if cell.top:
             nearLines.append((x0, y0, x1, y0))
         if cell.left:
