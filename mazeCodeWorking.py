@@ -86,13 +86,13 @@ def keyPressed(app, event):
     if(event.key == 'Up'):
         app.goUp = True
         app.rotationAngle = 90
-    if(event.key == 'Down'):
+    elif(event.key == 'Down'):
         app.goDown = True
         app.rotationAngle = 270
-    if(event.key == 'Left'):
+    elif(event.key == 'Left'):
         app.goLeft = True
         app.rotationAngle = 180
-    if(event.key == 'Right'):
+    elif(event.key == 'Right'):
         app.goRight = True
         app.rotationAngle = 0
 
@@ -111,48 +111,115 @@ def isDead(app):
         return True
         
 def timerFired(app):
-    print(getCell(app, 0, 0))
+    nearLines = getNearLines(app)
     moveGhost(app)
     if isDead(app):
         app.gameOver = True
+    for line in nearLines:
+        l_x0, l_y0, l_x1, l_y1 = line
+        if(collisionRectLine(app.pX - app.pR, app.pY - app.pR, app.pX + app.pR, app.pY + app.pR,
+                            l_x0, l_y0, l_x1, l_y1)):
+                                print(f'rect = {app.pX - app.pR}, {app.pY - app.pR}, {app.pX + app.pR}, {app.pY + app.pR}')
+                                print(f'line = {l_x0}, {l_y0}, {l_x1}, {l_y1}')
+
     if(app.goUp):
-        row, col = getCell(app, 0, 0)
-        x0, y0, x1, y1 = getCellBounds(app, row, col)
-        if(app.cells[row][col].top and y0 > 290):
+        legal = True
+        for line in nearLines:
+            l_x0, l_y0, l_x1, l_y1 = line
+            if(collisionRectLine(app.pX - app.pR - 6, app.pY - app.pR - 6, app.pX + app.pR - 6, app.pY + app.pR - 6,
+                                    l_x0, l_y0, l_x1, l_y1)):
+                                        legal = False
+        if(legal):
             app.dy += 6
-        app.dy += 6
+        
+
     if(app.goDown):
-        row, col = getCell(app, 0, 0)
-        x0, y0, x1, y1 = getCellBounds(app, row, col)
-        if(app.cells[row][col].bottom and y1 - app.margin < 67):
-            app.dy += 6
-        app.dy -= 6
+        legal = True
+        for line in nearLines:
+            l_x0, l_y0, l_x1, l_y1 = line
+            if(collisionRectLine(app.pX - app.pR + 6, app.pY - app.pR + 6, app.pX + app.pR + 6, app.pY + app.pR + 6,
+                                    l_x0, l_y0, l_x1, l_y1)):
+                                        app.dy += 7
+        if(legal):
+            app.dy -= 6
+        
+
     if(app.goLeft):
-        row, col = getCell(app, 0, 0)
-        x0, y0, x1, y1 = getCellBounds(app, row, col)
-        if(app.cells[row][col].left and x0 > 290):
-            print(x0, y0, x1, y1)
-            app.dx -= 6
-        app.dx += 6
-    if(app.goRight):
-        row, col = getCell(app, 0, 0)
-        x0, y0, x1, y1 = getCellBounds(app, row, col)
-        if(app.cells[row][col].right and x1 - app.margin < 68):
+        legal = True
+        for line in nearLines:
+            l_x0, l_y0, l_x1, l_y1 = line
+            if(collisionRectLine(app.pX - app.pR - 6, app.pY - app.pR - 6, app.pX + app.pR - 6, app.pY + app.pR - 6,
+                                    l_x0, l_y0, l_x1, l_y1)):
+                                        legal = False
+        if(legal):
             app.dx += 6
-        app.dx -= 6
+       
+
+    if(app.goRight):
+        legal = True
+        for line in nearLines:
+            l_x0, l_y0, l_x1, l_y1 = line
+            if(collisionRectLine(app.pX - app.pR + 6, app.pY - app.pR + 6, app.pX + app.pR + 6, app.pY + app.pR + 6,
+                                    l_x0, l_y0, l_x1, l_y1)):
+                                        legal = False
+        if(legal):
+            app.dx -= 6
 
 
 def keyReleased(app, event):
     if(event.key == 'Up'):
         app.goUp = False
-    if(event.key == 'Down'):
+    elif(event.key == 'Down'):
         app.goDown = False
-    if(event.key == 'Left'):
+    elif(event.key == 'Left'):
         app.goLeft = False
-    if(event.key == 'Right'):
+    elif(event.key == 'Right'):
         app.goRight = False
         
+def getNearCells(app):
+    nearCells = dict()
+    rowC, colC = getCell(app, app.pX, app.pY)
 
+    nearCells['center'] = (rowC, colC)
+    nearCells['up'] = (rowC - 1, colC)
+    nearCells['down'] = (rowC + 1, colC)
+    nearCells['left'] = (rowC, colC - 1)
+    nearCells['right'] = (rowC, colC + 1)
+
+    return nearCells
+
+def getNearLines(app):
+    nearCells = getNearCells(app)
+    nearLines = []
+    for c in nearCells:
+        x0, y0, x1, y1 = getCellBounds(app, nearCells[c][0], nearCells[c][1])
+        row = nearCells[c][0]
+        col = nearCells[c][1]
+        cell = app.cells[row][col]
+        if cell.top:
+            nearLines.append((x0, y0, x1, y0))
+        if cell.left:
+            nearLines.append((x0, y0, x0, y1))
+        if cell.right:
+            nearLines.append((x1, y0, x1, y1))
+        if cell.bottom:
+            nearLines.append((x0, y1, x1, y1))
+    return nearLines
+
+def collisionRectLine(r_x0, r_y0, r_x1, r_y1, l_x0, l_y0, l_x1, l_y1):
+    topRight = (r_x1, r_y0)
+    topLeft = (r_x0, r_y0)
+    botLeft = (r_x0, r_y1)
+    botRight = (r_x1, r_y1)
+
+    if(topRight[0] < l_x0):
+        return False
+    if(botLeft[0] > l_x1):
+        return False
+    if(botLeft[1] > l_y0 and topRight[1] < l_y1):
+        return True
+
+    return False
 
 def make_maze(app, w, h):
     visited = [[False] * w + [True] for _ in range(h)] + [[1] * (w + 1)]
