@@ -21,7 +21,7 @@ def appStarted(app):
     app.totalKeys = 0
 
     app.timerDelay = 15
-
+    app.win = False
     app.cellSize = 100
 
     app.rows = 16
@@ -100,10 +100,7 @@ def keyPressed(app, event):
         app.rotationAngle = 0
 
 def moveGhost(app):
-    randint = random.randint(0,50)
-    if randint == 49:
-        ghostMove = -1 * randint
-    else: ghostMove = 1
+    ghostMove = 1
     if app.pX > app.ghostX:
         app.ghostX += ghostMove
     else:
@@ -114,13 +111,17 @@ def moveGhost(app):
         app.ghostY -= ghostMove
 
 def isDead(app):
-    if ((app.pX -app.ghostX) ** 2 + (app.pY - app.ghostY) ** 2) ** 0.5 < 5:
+    if ((app.pX -app.ghostX) ** 2 + (app.pY - app.ghostY) ** 2) ** 0.5 < 30:
         return True
 
 def ghostGoAway(app):
     app.ghostX = app.pX - 600
-    app.ghostY = app.pY + 600
+    app.ghostY = app.pY - 600
     
+def leaveMaze(app):
+    if app.keysFound >= app.totalKeys and getCell(app, app.pX, app.pY) = (app.rows, app.cols):
+        app.win = True
+                                                                          
 def timerFired(app):
     nearLines = getNearLines(app)
     moveGhost(app)
@@ -133,7 +134,8 @@ def timerFired(app):
             app.newDE.remove(end)
             app.keysFound += 1
             ghostGoAway(app)
-        
+    leaveMaze(app)
+    
     for line in nearLines:
         l_x0, l_y0, l_x1, l_y1 = line
         if(collisionRectLine(app.pX - app.pR, app.pY - app.pR, app.pX + app.pR, app.pY + app.pR,
@@ -284,7 +286,7 @@ def selectDeadEnds(app):
         row = app.deadEnds[i][0]
         col = app.deadEnds[i][1]
         app.newDE.append((row, col))
-    print(app.newDE)
+    
 
 def drawGhost(app, canvas):
     canvas.create_image(app.ghostX, app.ghostY, image=ImageTk.PhotoImage(app.scaledGhost))
@@ -307,6 +309,10 @@ def drawGameOver(app, canvas):
     if app.gameOver:
         canvas.create_rectangle(0, 0, app.width, app.height, fill='black')
         canvas.create_text(app.width//2, app.height//2, text='Game Over', font='Arial 40 bold', fill='red')
+        
+def drawWin(app, canvas):
+    canvas.create_rectangle(0, 0, app.width, app.height, fill='black')
+    canvas.create_text(app.width//2, app.height//2, text='You Win', font='Arial 40 bold', fill='red')
 
 def drawPortal(app,canvas):
     row = app.rows - 1
@@ -345,6 +351,8 @@ def redrawAll(app, canvas):
     drawGhost(app, canvas)
     drawStartScreen(app, canvas)
     drawGameOver(app, canvas)
+    if app.win:
+        drawWin(app, canvas)
 
 if __name__ == '__main__':
     runApp(width=620, height=620)
