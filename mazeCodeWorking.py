@@ -20,6 +20,7 @@ def appStarted(app):
     app.cols = 16
     app.margin = app.height / 2 - app.cellSize / 2
     app.r = 10
+    app.pR = 15
     app.deadEnds = []
     app.newDE = []
     
@@ -32,8 +33,8 @@ def appStarted(app):
     app.dx = 0
     app.dy = 0
 
-    app.pX = getCellBounds(app, 1, 1)
-    app.pY = getCellBounds(app, 1, 1)
+    app.pX = app.width / 2
+    app.pY = app.height / 2
 
     app.cells = [([None] * app.cols) for i in range(app.rows)]
     for row in range(app.rows):
@@ -55,6 +56,11 @@ def getCellBounds(app, row, col):
     y1 = app.margin + ((row + 1)* app.cellSize) + app.dy
     return (x0, y0, x1, y1)
 
+def getCell(app, x, y):
+    row = (y - app.dy - app.margin) // app.cellSize + 3
+    col = (x - app.dx - app.margin) // app.cellSize + 3
+    return (int(row), int(col))
+
 def keyPressed(app, event):
     if(event.key == 'Up'):
         app.goUp = True
@@ -66,13 +72,31 @@ def keyPressed(app, event):
         app.goRight = True
 
 def timerFired(app):
+    print(getCell(app, 0, 0))
     if(app.goUp):
+        row, col = getCell(app, 0, 0)
+        x0, y0, x1, y1 = getCellBounds(app, row, col)
+        if(app.cells[row][col].top and y0 > 290):
+            app.dy += 6
         app.dy += 6
     if(app.goDown):
+        row, col = getCell(app, 0, 0)
+        x0, y0, x1, y1 = getCellBounds(app, row, col)
+        if(app.cells[row][col].bottom and y1 - app.margin < 67):
+            app.dy += 6
         app.dy -= 6
     if(app.goLeft):
+        row, col = getCell(app, 0, 0)
+        x0, y0, x1, y1 = getCellBounds(app, row, col)
+        if(app.cells[row][col].left and x0 > 290):
+            print(x0, y0, x1, y1)
+            app.dx -= 6
         app.dx += 6
     if(app.goRight):
+        row, col = getCell(app, 0, 0)
+        x0, y0, x1, y1 = getCellBounds(app, row, col)
+        if(app.cells[row][col].right and x1 - app.margin < 68):
+            app.dx += 6
         app.dx -= 6
 
 
@@ -132,7 +156,7 @@ def selectDeadEnds(app):
         row = app.deadEnds[i][0]
         col = app.deadEnds[i][1]
         app.newDE.append((row, col))
-
+    print(app.newDE)
 
 
 def drawDeadEnds(app, canvas):
@@ -141,7 +165,7 @@ def drawDeadEnds(app, canvas):
         canvas.create_oval(x0 + app.r, y0 + app.r ,x1 - app.r ,y1 - app.r, fill = 'blue')
     
 def drawPlayer(app, canvas):
-    canvas.create_rectangle(app.player)
+    canvas.create_rectangle(app.pX - app.pR, app.pY - app.pR, app.pX + app.pR, app.pY + app.pR, fill = 'orange')
 
 def redrawAll(app, canvas):
     for row in range(app.rows):
@@ -157,6 +181,7 @@ def redrawAll(app, canvas):
             if cell.bottom:
                 canvas.create_line(x0, y1, x1, y1)
     drawDeadEnds(app, canvas)
+    drawPlayer(app, canvas)
 
 
 
