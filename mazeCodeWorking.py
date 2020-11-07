@@ -16,6 +16,9 @@ def appStarted(app):
     app.gameOver = False
     app.score = 0
     app.endMaze = False
+    
+    app.keysFound = 0
+    app.totalKeys = 0
 
     app.timerDelay = 15
 
@@ -97,24 +100,40 @@ def keyPressed(app, event):
         app.rotationAngle = 0
 
 def moveGhost(app):
+    randint = random.randint(0,50)
+    if randint == 49:
+        ghostMove = randint
+    else: ghostMove = 1
     if app.pX > app.ghostX:
-        app.ghostX += 1
+        app.ghostX += ghostMove
     else:
-        app.ghostX -= 1
+        app.ghostX -= ghostMove
     if app.pY > app.ghostY:
-        app.ghostY += 1
+        app.ghostY += ghostMove
     else:
-        app.ghostY -= 1
+        app.ghostY -= ghostMove
 
 def isDead(app):
     if ((app.pX -app.ghostX) ** 2 + (app.pY - app.ghostY) ** 2) ** 0.5 < 5:
         return True
-        
+
+def ghostGoAway(app):
+    app.ghostX = app.pX - 600
+    app.ghostY = app.pY + 600
+    
 def timerFired(app):
     nearLines = getNearLines(app)
     moveGhost(app)
     if isDead(app):
         app.gameOver = True
+        
+    for end in app.newDE:
+        (x0, y0, x1, y1) = getCellBounds(app, end[0], end[1])
+        if ((app.pX -(x0 + 5*app.r)) ** 2 + (app.pY - (y0 + 5*app.r)) ** 2) ** 0.5 < 15:
+            app.newDE.remove(end)
+            app.keysFound += 1
+            ghostGoAway(app)
+        
     for line in nearLines:
         l_x0, l_y0, l_x1, l_y1 = line
         if(collisionRectLine(app.pX - app.pR, app.pY - app.pR, app.pX + app.pR, app.pY + app.pR,
@@ -320,7 +339,8 @@ def redrawAll(app, canvas):
             if cell.bottom:
                 canvas.create_line(x0, y1, x1, y1, width = 3, fill="white")
     drawDeadEnds(app, canvas)
-    drawPortal(app, canvas)
+    if app.keysFound >= app.totalKeys:
+        drawPortal(app, canvas)
     drawPlayer(app, canvas)
     drawGhost(app, canvas)
     drawStartScreen(app, canvas)
