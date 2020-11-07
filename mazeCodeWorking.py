@@ -41,6 +41,9 @@ def appStarted(app):
     app.charImg = app.loadImage('character.gif')
     app.scaledChar = app.scaleImage(app.charImg, 2/5)
 
+    app.ghostImg = app.loadImage('ghost.gif')
+    app.scaledGhost = app.scaleImage(app.ghostImg, 1/6)
+
     app.rotationAngle = 0
     
     app.pX = app.width / 2
@@ -87,7 +90,6 @@ def keyPressed(app, event):
     if(event.key == 'Right'):
         app.goRight = True
         app.rotationAngle = 0
-
 
 def moveGhost(app):
     if app.pX > app.ghostX:
@@ -188,7 +190,7 @@ def selectDeadEnds(app):
     print(app.newDE)
 
 def drawGhost(app, canvas):
-    canvas.create_rectangle(app.ghostX-10, app.ghostY -10, app.ghostX+10, app.ghostY +10, fill = "green")
+    canvas.create_image(app.ghostX, app.ghostY, image=ImageTk.PhotoImage(app.scaledGhost))
 
 def drawDeadEnds(app, canvas):
     for end in app.newDE:
