@@ -10,7 +10,7 @@ PIL! for images and 112 graphics.
 
 RUN:
 
-mazeCodeWorking
+mazeCodeWorking.py
 
 
 
