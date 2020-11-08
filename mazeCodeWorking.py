@@ -130,7 +130,7 @@ def timerFired(app):
         
     for end in app.newDE:
         (x0, y0, x1, y1) = getCellBounds(app, end[0], end[1])
-        if ((app.pX -(x0 + 5*app.r)) ** 2 + (app.pY - (y0 + 5*app.r)) ** 2) ** 0.5 < 15:
+        if ((app.pX -(x0 + 5*app.r)) ** 2 + (app.pY - (y0 + 5*app.r)) ** 2) ** 0.5 < 25:
             app.newDE.remove(end)
             app.keysFound += 1
             ghostGoAway(app)
