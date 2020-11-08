@@ -123,7 +123,7 @@ def leaveMaze(app):
     col = app.cols - 1
     (x0, y0, x1, y1) = getCellCound(app, row, col)
     
-    if app.keysFound >= app.totalKeys and ((app.pX - x1)**2 + (app.pY - y1) **)** 0.5 < 50:
+    if app.keysFound >= app.totalKeys and ((app.pX - x1)**2 + (app.pY - y1) **)** 0.5 < 100:
         app.win = True
                                                                           
 def timerFired(app):
