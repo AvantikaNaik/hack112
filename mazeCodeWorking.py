@@ -216,7 +216,7 @@ def getNearLines(app):
         x0, y0, x1, y1 = getCellBounds(app, nearCells[c][0], nearCells[c][1])
         row = nearCells[c][0]
         col = nearCells[c][1]
-        cell = app.cells[row - 5][col - 5]
+        cell = app.cells[row][col]
         if cell.top:
             nearLines.append((x0, y0, x1, y0))
         if cell.left:
