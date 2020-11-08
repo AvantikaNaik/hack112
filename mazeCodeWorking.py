@@ -81,8 +81,8 @@ def getCellBounds(app, row, col):
     return (x0, y0, x1, y1)
 
 def getCell(app, x, y):
-    row = (y - app.dy - app.margin) // app.cellSize + 3
-    col = (x - app.dx - app.margin) // app.cellSize + 3
+    row = (y - app.dy - app.margin) // app.cellSize 
+    col = (x - app.dx - app.margin) // app.cellSize 
     return (int(row), int(col))
 
 def keyPressed(app, event):
