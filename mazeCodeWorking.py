@@ -119,7 +119,7 @@ def ghostGoAway(app):
     app.ghostY = app.pY - 600
     
 def leaveMaze(app):
-    if app.keysFound >= app.totalKeys and getCell(app, app.pX, app.pY) == (app.rows, app.cols):
+    if app.keysFound >= app.totalKeys and getCell(app, app.pX, app.pY) == (app.rows - 1, app.cols - 1):
         app.win = True
                                                                           
 def timerFired(app):
