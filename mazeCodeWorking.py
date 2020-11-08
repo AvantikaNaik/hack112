@@ -164,7 +164,7 @@ def timerFired(app):
             l_x0, l_y0, l_x1, l_y1 = line
             if(collisionRectLine(app.pX - app.pR + 6, app.pY - app.pR + 6, app.pX + app.pR + 6, app.pY + app.pR + 6,
                                     l_x0, l_y0, l_x1, l_y1)):
-                                        legal = False
+                                        app.dy += 7
         if(legal):
             app.dy -= 6
         
@@ -220,7 +220,7 @@ def getNearLines(app):
         x0, y0, x1, y1 = getCellBounds(app, nearCells[c][0], nearCells[c][1])
         row = nearCells[c][0]
         col = nearCells[c][1]
-        cell = app.cells[row - 5][col - 5]
+        cell = app.cells[row][col]
         if cell.top:
             nearLines.append((x0, y0, x1, y0))
         if cell.left:
@@ -230,6 +230,7 @@ def getNearLines(app):
         if cell.bottom:
             nearLines.append((x0, y1, x1, y1))
     return nearLines
+
 
 def collisionRectLine(r_x0, r_y0, r_x1, r_y1, l_x0, l_y0, l_x1, l_y1):
     topRight = (r_x1, r_y0)
