@@ -164,7 +164,7 @@ def timerFired(app):
             l_x0, l_y0, l_x1, l_y1 = line
             if(collisionRectLine(app.pX - app.pR + 6, app.pY - app.pR + 6, app.pX + app.pR + 6, app.pY + app.pR + 6,
                                     l_x0, l_y0, l_x1, l_y1)):
-                                        app.dy += 7
+                                        legal = False
         if(legal):
             app.dy -= 6
         
