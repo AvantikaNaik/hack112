@@ -18,7 +18,7 @@ def appStarted(app):
     app.endMaze = False
     
     app.keysFound = 0
-    app.totalKeys = 0
+    app.totalKeys = 5
 
     app.timerDelay = 15
     app.win = False
@@ -119,7 +119,7 @@ def ghostGoAway(app):
     app.ghostY = app.pY - 600
     
 def leaveMaze(app):
-    if app.keysFound >= app.totalKeys and getCell(app, app.pX, app.pY) = (app.rows, app.cols):
+    if app.keysFound >= app.totalKeys and getCell(app, app.pX, app.pY) == (app.rows, app.cols):
         app.win = True
                                                                           
 def timerFired(app):
