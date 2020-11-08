@@ -121,7 +121,7 @@ def ghostGoAway(app):
 def leaveMaze(app):
     row = app.rows - 1
     col = app.cols - 1
-    (x0, y0, x1, y1) = getCellCound(app, row, col)
+    (x0, y0, x1, y1) = getCellCount(app, row, col)
     
     if app.keysFound >= app.totalKeys and ((app.pX - x1)**2 + (app.pY - y1) **)** 0.5 < 100:
         app.win = True
